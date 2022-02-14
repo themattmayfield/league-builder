@@ -51,11 +51,11 @@ model User {
   updatedAt     DateTime       @updatedAt
   firstName     String
   lastName      String
-  email         String?        @unique
+  email         String         @unique
   password      String?
   emailVerified DateTime?
   image         String?
-  role          String?        @default("user") //MIGHT GET RID OF BECAUSE OF LEAGUE MEMBER
+  role          String         @default("user") //MIGHT GET RID OF BECAUSE OF LEAGUE MEMBER
   accounts      Account[]
   sessions      Session[]
   leagues       LeagueMember[]

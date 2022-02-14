@@ -2,8 +2,8 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { verifyPassword, hashPassword } from 'lib/auth/passwords'
-// import Session from 'types/next-auth'
-import prisma from 'backend/prisma'
+import { Session } from 'lib/auth/session'
+import { prisma } from 'backend/prisma'
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -13,8 +13,8 @@ export default NextAuth({
   },
   pages: {
     signIn: '/login',
-    error: '/auth/error' // Error code passed in query string as ?error=
-    // signOut: "/auth/logout",
+    error: '/auth/error', // Error code passed in query string as ?error=
+    signOut: '/'
   },
   providers: [
     CredentialsProvider({
@@ -36,7 +36,7 @@ export default NextAuth({
         try {
           let maybeUser = await prisma.user.findFirst({
             where: {
-              email: credentials.email
+              email: credentials?.email
             },
             select: {
               id: true,
@@ -49,11 +49,13 @@ export default NextAuth({
           })
 
           if (!maybeUser) {
-            if (!credentials.password || !credentials.email) {
-              throw new Error('Invalid Credentials')
+            if (!credentials?.password || !credentials?.email) {
+              throw new Error('Email or password missing.')
             }
+
+            throw new Error('No user found.')
           } else {
-            const isValid = await verifyPassword(credentials.password, maybeUser.password)
+            const isValid = await verifyPassword(credentials?.password as string, maybeUser.password as string)
 
             if (!isValid) {
               throw new Error('Invalid Credentials')
@@ -61,71 +63,15 @@ export default NextAuth({
           }
 
           return {
-            id: maybeUser.id,
-            email: maybeUser.email,
-            firstName: maybeUser.firstName,
-            lastName: maybeUser.lastName,
-            role: maybeUser.role
+            id: maybeUser?.id,
+            email: maybeUser?.email,
+            firstName: maybeUser?.firstName,
+            lastName: maybeUser?.lastName,
+            role: maybeUser?.role
           }
         } catch (error) {
           console.log(error)
           throw error
-        }
-      }
-    }),
-    CredentialsProvider({
-      id: 'admin-login',
-      name: 'Administrator Login',
-      credentials: {
-        email: {
-          label: 'Email Address',
-          type: 'email',
-          placeholder: 'john.doe@example.com'
-        },
-        password: {
-          label: 'Password',
-          type: 'password',
-          placeholder: 'Your super secure password'
-        }
-      },
-      async authorize(credentials) {
-        console.log('credentials:', credentials)
-
-        let maybeUser = await prisma.user.findFirst({
-          where: {
-            email: credentials.email
-          },
-          select: {
-            id: true,
-            email: true,
-            password: true,
-            firstName: true,
-            lastName: true,
-            role: true
-          }
-        })
-
-        if (!maybeUser) {
-          throw new Error('No Admin')
-        }
-
-        if (maybeUser?.role !== 'admin') {
-          throw new Error('Unauthorized')
-        }
-
-        const isValid = await verifyPassword(credentials.password, maybeUser.password)
-
-        if (!isValid) {
-          // return null
-          throw new Error('Invalid Admin Credentials')
-        }
-
-        return {
-          id: maybeUser.id,
-          email: maybeUser.email,
-          firstName: maybeUser.firstName,
-          lastName: maybeUser.lastName,
-          role: maybeUser.role
         }
       }
     })
@@ -146,7 +92,7 @@ export default NextAuth({
       return token
     },
     async session({ session, token, user }) {
-      const sess = {
+      const sess: Session = {
         ...session,
         user: {
           ...session.user,

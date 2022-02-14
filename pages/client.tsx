@@ -1,4 +1,4 @@
-import AppLayout from 'components/Layouts/AppLayout'
+import Layout from 'components/Layout'
 import { useSession } from 'next-auth/react'
 import Loader from 'components/Loader'
 
@@ -13,7 +13,7 @@ const Page = () => {
 
   return (
     <>
-      <AppLayout>
+      <Layout>
         <blockquote>
           <p>This page uses the useSession() React Hook.</p>
 
@@ -31,7 +31,7 @@ const Page = () => {
             But in this case the session is <strong>not</strong> available on the first render.
           </p>
         </blockquote>
-      </AppLayout>
+      </Layout>
     </>
   )
 }

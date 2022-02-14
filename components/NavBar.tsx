@@ -5,7 +5,7 @@ const navItems = [
   {
     id: '0',
     label: 'dashboard',
-    link: '/'
+    link: '/dashboard'
   },
   {
     id: '1',
@@ -21,36 +21,46 @@ const navItems = [
 
 function Header() {
   const { data: session, status } = useSession()
-  const { data: userData, error, isLoading } = trpc.useQuery(['get-user', { userId: session?.user?.id }])
-  const { user } = userData
+  const { data: userData, error, isLoading } = trpc.useQuery(['get-user', { userId: session?.user?.id as string }])
+  console.log(status)
+
   const router = useRouter()
 
   return (
-    <header className='w-full bg-white border-b border-gray-200'>
+    <header className='z-50 w-full border-b border-gray-200 bg-white'>
       <div className='border-t-[5px] border-leagueBlue' />
-      <div className='px-8 2xl:px-0  max-w-6xl mx-auto flex items-center justify-between h-[60px] -mb-px'>
+      <div className='mx-auto -mb-px flex h-[60px] max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8 2xl:px-0'>
         {/* Header: Left side */}
         <div className='flex items-center space-x-4 sm:space-x-6'>
           {/* Logo */}
 
-          <div className='w-7 h-7 mr-2 rounded-full bg-leagueBlue cursor-pointer' />
+          <button onClick={() => router.push('/')} className='mr-2 h-7 w-7 cursor-pointer rounded-full bg-leagueBlue' />
 
-          {navItems.map((item) => (
+          {session ? (
+            navItems.map((item) => (
+              <button
+                onClick={() => router.push(item.link)}
+                key={item.id}
+                className='cursor-pointer text-base font-light text-black hover:underline'
+              >
+                {item.label}
+              </button>
+            ))
+          ) : (
             <button
-              onClick={() => router.push(item.link)}
-              key={item.id}
-              className='text-base font-light hover:underline text-black cursor-pointer'
+              onClick={() => router.push('login')}
+              className='cursor-pointer text-base font-light text-black hover:underline'
             >
-              {item.label}
+              login
             </button>
-          ))}
+          )}
         </div>
         {/* Header: Right side */}
         {/* Default */}
 
-        {user?.firstName ? (
-          <div className='grid place-items-center w-8 h-8 rounded-full bg-leagueBlue text-white cursor-pointer'>
-            <p className='text-xs'>{user.firstName[0]}</p>
+        {userData?.user?.firstName ? (
+          <div className='grid h-8 w-8 cursor-pointer place-items-center rounded-full bg-leagueBlue text-white'>
+            <p className='text-xs'>{userData?.user?.firstName[0]}</p>
           </div>
         ) : null}
       </div>

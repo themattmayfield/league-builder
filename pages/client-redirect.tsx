@@ -1,4 +1,4 @@
-import AppLayout from 'components/Layouts/AppLayout'
+import Layout from 'components/Layout'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
@@ -17,10 +17,10 @@ const Page = () => {
 
   return (
     <>
-      <AppLayout>
+      <Layout>
         <div>
           <h1>
-            Hello, {`${session.user.name ?? session.user.email}`} This is a protected route. You can see it because
+            Hello, {`${session?.user?.name ?? session?.user?.email}`} This is a protected route. You can see it because
             you're logged in.
           </h1>
         </div>
@@ -35,7 +35,7 @@ const Page = () => {
             But in this case the session is <strong>not</strong> available on the first render.
           </p>
         </blockquote>
-      </AppLayout>
+      </Layout>
     </>
   )
 }

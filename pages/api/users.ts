@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import isEmpty from 'lodash/isEmpty'
 import nc from 'next-connect'
-import prisma, { Prisma } from 'backend/prisma'
+import { prisma } from 'backend/prisma'
 import { getSession } from 'next-auth/react'
+import { Prisma } from '@prisma/client'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req })
@@ -37,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const users = await prisma.user.findMany(findManyArgs)
 
     return res.status(200).json(users)
-  } catch (error) {
+  } catch (error: any) {
     console.error('[api] user', error)
     return res.status(500).json({ statusCode: 500, message: error.message })
   }

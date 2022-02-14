@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import nc from 'next-connect'
 import { hashPassword } from 'lib/auth/passwords'
-import prisma from 'backend/prisma'
+import { prisma } from 'backend/prisma'
 
 const post = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -56,7 +56,7 @@ const post = async (req: NextApiRequest, res: NextApiResponse) => {
         data: newMember
       })
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('[api] auth/member/create', error)
     return res.status(500).json({ statusCode: 500, message: error.message })
   }

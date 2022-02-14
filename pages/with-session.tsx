@@ -1,4 +1,4 @@
-import AppLayout from 'components/Layouts/AppLayout'
+import Layout from 'components/Layout'
 import { useSession, signIn } from 'next-auth/react'
 import { useQuery } from 'react-query'
 import superagent from 'superagent'
@@ -30,7 +30,7 @@ const Page = () => {
   if (!session) {
     return (
       <>
-        <AppLayout title='With Session'>
+        <Layout>
           <blockquote>
             <h1>Access Denied</h1>
             <h1>
@@ -40,22 +40,22 @@ const Page = () => {
               to see a secret message
             </h1>
           </blockquote>
-        </AppLayout>
+        </Layout>
       </>
     )
   }
 
   return (
     <>
-      <AppLayout title='With Session'>
+      <Layout>
         <div>
-          <h1>Hello, {`${session.user.name ?? session.user.email}`} You can see this because you're logged in.</h1>
+          <h1>Hello, {`${session?.user?.name ?? session?.user?.email}`} You can see this because you're logged in.</h1>
           <blockquote>
             <p>This example shows usage with React Query and protected api routes.</p>
           </blockquote>
           {withSessionQuery?.data && <p>{withSessionQuery.data}</p>}
         </div>
-      </AppLayout>
+      </Layout>
     </>
   )
 }

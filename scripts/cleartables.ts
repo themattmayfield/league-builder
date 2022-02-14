@@ -1,10 +1,10 @@
-import prisma from '../backend/prisma'
+import { prisma } from '../backend/prisma'
 
 const cleanupDatabase = () => {
   const propertyNames = Object.getOwnPropertyNames(prisma)
-  const modelNames = propertyNames.filter((propertyName) => !propertyName.startsWith('_'))
+  const modelNames: string[] = propertyNames.filter((propertyName: string) => !propertyName.startsWith('_'))
 
-  return Promise.all(modelNames.map((model) => prisma[model].deleteMany()))
+  return Promise.all(modelNames.map((model) => (prisma as any)[model].deleteMany()))
 }
 
 cleanupDatabase()

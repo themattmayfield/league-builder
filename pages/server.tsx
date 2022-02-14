@@ -1,4 +1,4 @@
-import AppLayout from 'components/Layouts/AppLayout'
+import Layout from 'components/Layout'
 import { useSession } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
 import type { GetServerSideProps } from 'next'
@@ -11,7 +11,7 @@ const Page: React.FC = (props) => {
   console.log(status, session)
   return (
     <>
-      <AppLayout title='Server'>
+      <Layout>
         <blockquote>
           <p>This page uses the universal getSession() method in getServerSideProps().</p>
 
@@ -30,7 +30,7 @@ const Page: React.FC = (props) => {
             But in this case the session is <strong>not</strong> available on the first render.
           </p>
         </blockquote>
-      </AppLayout>
+      </Layout>
     </>
   )
 }

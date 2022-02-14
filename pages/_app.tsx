@@ -9,17 +9,11 @@ import { SessionProvider } from 'next-auth/react'
 import WithAuth from 'lib/auth/WithAuth'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { getBaseUrl } from 'lib/helper'
 
 export const queryClient = new QueryClient()
 
-function getBaseUrl() {
-  if (process.browser) return '' // Browser should use current path
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}` // SSR should use vercel url
-
-  return `http://localhost:${process.env.PORT ?? 3000}` // dev SSR should use localhost
-}
-
-const MyApp: AppType = ({ Component, pageProps: { session, ...pageProps } }: ExtendedAppProps) => {
+const MyApp = ({ Component, pageProps: { session, ...pageProps } }: ExtendedAppProps) => {
   return (
     <SessionProvider session={session} refetchInterval={5 * 60}>
       <QueryClientProvider client={queryClient}>
