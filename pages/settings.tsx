@@ -62,7 +62,7 @@ export default function Settings() {
   )
 }
 
-Settings.auth = {}
+Settings.auth = true
 
 const Stats: FC<SettingsProps> = ({ title, info }) => (
   <div className='flex flex-col space-y-2'>

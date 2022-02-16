@@ -195,6 +195,7 @@ export default function AdminSetup({ csrfToken }: any) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context)
+  console.log(session)
 
   if (session) {
     return { redirect: { permanent: false, destination: session?.user?.role == 'admin' ? '/admin' : '/' } }

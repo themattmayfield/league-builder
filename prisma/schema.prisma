@@ -59,6 +59,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   leagues       LeagueMember[]
+  adminTo       League[]
 }
 
 model League {
@@ -66,6 +67,8 @@ model League {
   name    String
   image   String?
   members LeagueMember[]
+  admin   User           @relation(fields: [adminId], references: [id]) //Dont necessarily need this, but nice
+  adminId String
 }
 
 model LeagueMember {
@@ -76,7 +79,6 @@ model LeagueMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   createdBy String
-  role      String?  @default("user")
 
   @@id([userId, leagueId])
 }

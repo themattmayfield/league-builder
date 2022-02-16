@@ -48,10 +48,10 @@ const post = async (req: NextApiRequest, res: NextApiResponse) => {
       await prisma.league.create({
         data: {
           name: req.body.leagueName,
+          adminId: admin.id,
           members: {
             create: [
               {
-                role: 'admin',
                 createdBy: admin.email as string,
                 member: {
                   connect: {

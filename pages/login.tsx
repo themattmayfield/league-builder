@@ -1,7 +1,7 @@
 import { filter } from 'lodash'
 import { GetServerSidePropsContext } from 'next'
 import { getSession, getCsrfToken, signIn, getProviders } from 'next-auth/react'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { AuthLayout } from 'components/AuthUtils'
 import { toast } from 'react-toastify'
@@ -16,7 +16,7 @@ interface LoginFormValues {
 
 export default function Login({ csrfToken }: any) {
   const router = useRouter()
-  const [isSubmitting, setSubmitting] = React.useState(false)
+  const [isSubmitting, setSubmitting] = useState(false)
 
   const { register, handleSubmit } = useForm<LoginFormValues>()
 
@@ -25,7 +25,6 @@ export default function Login({ csrfToken }: any) {
 
     try {
       const response: any = await signIn('app-login', {
-        callbackUrl: '/',
         redirect: false,
         email: data.email,
         password: data.password
@@ -34,7 +33,8 @@ export default function Login({ csrfToken }: any) {
       if (response.error) {
         throw new Error(response.error)
       }
-      router.push(response.url)
+
+      router.push('/dashboard')
 
       setTimeout(() => {
         setSubmitting(false)
@@ -79,7 +79,7 @@ export default function Login({ csrfToken }: any) {
               id='password'
               type='password'
               autoComplete='current-password'
-              minLength={12}
+              // minLength={12}
               required
               {...register('password')}
               className='relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
